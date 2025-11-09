@@ -23,8 +23,22 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 
 // JWT Authentication
-var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "your-super-secret-jwt-key-for-portfolio-admin-system-2024";
-var key = Encoding.UTF8.GetBytes(jwtKey);
+// Prefer explicit environment variable (JWT_SECRET_KEY) when deployed on platforms like Render.
+// Fall back to configuration file value (appsettings) or a built-in development key.
+var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
+             ?? builder.Configuration["Jwt:SecretKey"]
+             ?? "your-super-secret-jwt-key-for-portfolio-admin-system-2024-with-extra-security-padding";
+
+// Validate key length early so we surface a clear error instead of the cryptic IDX10720 later.
+var keyBytes = Encoding.UTF8.GetBytes(jwtKey ?? string.Empty);
+if (keyBytes.Length < 32)
+{
+    // 32 bytes == 256 bits required by HmacSha256
+    Console.Error.WriteLine($"FATAL: JWT secret key is too short ({keyBytes.Length} bytes). It must be at least 32 bytes (256 bits).\nSet environment variable JWT_SECRET_KEY with a sufficiently long secret.");
+    throw new InvalidOperationException("JWT secret too short. Set JWT_SECRET_KEY to at least 32 characters (256 bits).");
+}
+
+var key = keyBytes;
 
 builder.Services.AddAuthentication(options =>
 {
@@ -57,7 +71,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
                 // Production domains
                 "https://admin-kapil.netlify.app",        // Your admin dashboard
-                "https://kapil-portfolio.netlify.app",    // Your portfolio website
+                "https://kapilkaushal.netlify.app/",    // Your portfolio website
                 "https://portfolio-kapil.netlify.app",    // Alternative portfolio URL
                 "https://kapil-admin.netlify.app",        // Alternative admin URL
                 

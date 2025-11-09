@@ -9,8 +9,36 @@ public class DatabaseContext
 
     public DatabaseContext(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection") 
-            ?? "Data Source=portfolio.db";
+        var dbPath = configuration.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(dbPath))
+        {
+            // In production, use a writable directory
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+            {
+                // Check for platform-specific persistent storage environment variable
+                var dataDir = Environment.GetEnvironmentVariable("DATA_DIR") ?? "/tmp";
+                var fullPath = Path.Combine(dataDir, "portfolio.db");
+                dbPath = $"Data Source={fullPath}";
+                
+                // Ensure directory exists
+                try
+                {
+                    Directory.CreateDirectory(dataDir);
+                    Console.WriteLine($"Data directory created/verified: {dataDir}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Warning: Could not create data directory: {ex.Message}");
+                }
+            }
+            else
+            {
+                dbPath = "Data Source=portfolio.db";
+            }
+        }
+        _connectionString = dbPath;
+        Console.WriteLine($"Using database path: {_connectionString}");
+        Console.WriteLine($"Environment: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
     }
 
     public IDbConnection CreateConnection()
@@ -20,8 +48,12 @@ public class DatabaseContext
 
     public async Task InitializeAsync()
     {
-        using var connection = (SqliteConnection)CreateConnection();
-        await connection.OpenAsync();
+        try
+        {
+            using var connection = (SqliteConnection)CreateConnection();
+            Console.WriteLine("Initializing database...");
+            await connection.OpenAsync();
+            Console.WriteLine("Database connection opened successfully");
 
         // Create Users table
         var createUsersTable = @"
@@ -246,6 +278,15 @@ public class DatabaseContext
             using var alterCommand = connection.CreateCommand();
             alterCommand.CommandText = "ALTER TABLE AboutSection ADD COLUMN ProfileImageUrl TEXT";
             await alterCommand.ExecuteNonQueryAsync();
+        }
+        
+        Console.WriteLine("Database initialization completed successfully");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Database initialization failed: {ex.Message}");
+            Console.Error.WriteLine($"Stack trace: {ex.StackTrace}");
+            throw;
         }
     }
 }

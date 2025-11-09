@@ -73,7 +73,19 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
+            // Log the full exception details
+            Console.WriteLine($"Registration error: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+            if (ex.InnerException != null)
+            {
+                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                Console.WriteLine($"Inner stack trace: {ex.InnerException.StackTrace}");
+            }
+            return StatusCode(500, new { 
+                message = "An error occurred during registration", 
+                error = ex.Message,
+                details = ex.StackTrace 
+            });
         }
     }
 

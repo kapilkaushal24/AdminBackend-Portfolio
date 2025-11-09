@@ -16,7 +16,7 @@ envVars:
   - key: ASPNETCORE_URLS
     value: http://+:10000
   - key: JWT_SECRET_KEY
-    sync: false  # Set this as a secret in Render
+    generateValue: true # Will generate a secure 256-bit key
   - key: JWT_ISSUER
     value: PortfolioAdmin.Api
   - key: JWT_AUDIENCE

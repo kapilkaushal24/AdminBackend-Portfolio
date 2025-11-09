@@ -1,5 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 using PortfolioAdmin.Api.Models;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -22,7 +23,11 @@ public class JwtService : IJwtService
     public JwtService(IConfiguration configuration)
     {
         _configuration = configuration;
-        _secretKey = _configuration["Jwt:SecretKey"] ?? "your-super-secret-jwt-key-for-portfolio-admin-system-2024";
+        // Prefer explicit environment variable when deployed (JWT_SECRET_KEY).
+        var envSecret = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+        _secretKey = !string.IsNullOrEmpty(envSecret)
+            ? envSecret
+            : _configuration["Jwt:SecretKey"] ?? "your-super-secret-jwt-key-for-portfolio-admin-system-2024";
         _issuer = _configuration["Jwt:Issuer"] ?? "PortfolioAdmin.Api";
         _audience = _configuration["Jwt:Audience"] ?? "PortfolioAdmin.Client";
     }
