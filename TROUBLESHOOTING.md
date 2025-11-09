@@ -30,6 +30,22 @@ from origin 'https://admin-kapil.netlify.app' has been blocked by CORS policy
 - ✅ Added CORS test endpoint at `/api/cors-test`
 - ✅ Configured proper CORS headers
 
+### Issue: JWT Authentication Error
+
+**Error Message:**
+```
+IDX10720: Unable to create KeyedHashAlgorithm for algorithm 'HS256', 
+the key size must be greater than: '256' bits, key has '136' bits.
+```
+
+**Cause:**
+JWT secret key is too short. HS256 algorithm requires minimum 256 bits (32 characters).
+
+**Solutions Applied:**
+- ✅ Updated JWT secret key to 64+ characters
+- ✅ Created JWT key generator documentation
+- ✅ Fixed minimum key length requirement
+
 ### URLs to Test:
 
 1. **Root**: `https://backend-portfolio-lpjj.onrender.com/`
@@ -52,10 +68,12 @@ from origin 'https://admin-kapil.netlify.app' has been blocked by CORS policy
 ```
 ASPNETCORE_ENVIRONMENT=Production
 ASPNETCORE_URLS=http://+:10000
-JWT_SECRET_KEY=[your-secret-key]
+JWT_SECRET_KEY=SuperSecureJwtKeyForPortfolioAdminSystem2024WithExtraSecurityPadding!
 JWT_ISSUER=PortfolioAdmin.Api
 JWT_AUDIENCE=PortfolioAdmin.Client
 ```
+
+**Important**: JWT_SECRET_KEY must be at least 32 characters (256 bits) for HS256 algorithm.
 
 ### Check Render Logs:
 
