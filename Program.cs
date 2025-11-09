@@ -9,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Add Health Checks
+builder.Services.AddHealthChecks();
+
 // Database
 builder.Services.AddSingleton<DatabaseContext>();
 
@@ -176,6 +179,10 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Map health check endpoints (BEFORE MapControllers)
+app.MapHealthChecks("/health");
+app.MapHealthChecks("/api/health");
 
 // Add a root endpoint
 app.MapGet("/", () => Results.Redirect("/swagger"));

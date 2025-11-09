@@ -23,7 +23,7 @@ envVars:
     value: PortfolioAdmin.Client
 
 # Health Check
-healthCheckPath: /api/health
+healthCheckPath: /health
 
 # Autoscaling (if on paid plan)
 # autoDeploy: true
