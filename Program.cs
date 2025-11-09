@@ -71,7 +71,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
                 // Production domains
                 "https://admin-kapil.netlify.app",        // Your admin dashboard
-                "https://kapilkaushal.netlify.app/",    // Your portfolio website
+                "https://kapilkaushal.netlify.app",       // Your portfolio website
                 "https://portfolio-kapil.netlify.app",    // Alternative portfolio URL
                 "https://kapil-admin.netlify.app",        // Alternative admin URL
                 
