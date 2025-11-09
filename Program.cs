@@ -146,10 +146,16 @@ else
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio Admin API v1");
         c.RoutePrefix = "swagger";
+        c.DocumentTitle = "Portfolio Admin API Documentation";
     });
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development - Render handles HTTPS
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors("AllowFrontend");
 
 // Enable serving static files from uploads directory
@@ -157,6 +163,9 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Add a root endpoint
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.MapControllers();
 
