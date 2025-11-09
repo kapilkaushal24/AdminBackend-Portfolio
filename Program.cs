@@ -48,35 +48,34 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// CORS - Allow both admin dashboard (3000) and portfolio website (5173)
+// CORS - Allow frontend domains
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        if (builder.Environment.IsDevelopment())
-        {
-            policy.WithOrigins(
-                    "http://localhost:3000",  // Admin Dashboard (Next.js)
-                    "https://localhost:3000",
-                    "http://localhost:5173",  // Portfolio Website (Vite/React)
-                    "https://localhost:5173"
-                  )
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        }
-        else
-        {
-            // In production, allow your frontend domains
-            policy.WithOrigins(
-                    "https://admin-kapil.netlify.app/", // Replace with your actual frontend URL
-                    "https://admin-kapil.netlify.app/", // Replace with your actual portfolio URL
-                    "https://admin-kapil.netlify.app/" // Replace with your custom domain if any
-                  )
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        }
+        // Allow all necessary domains for both development and production
+        policy.WithOrigins(
+                // Production domains
+                "https://admin-kapil.netlify.app",        // Your admin dashboard
+                "https://kapil-portfolio.netlify.app",    // Your portfolio website
+                "https://portfolio-kapil.netlify.app",    // Alternative portfolio URL
+                "https://kapil-admin.netlify.app",        // Alternative admin URL
+                
+                // Development domains
+                "http://localhost:3000",                  // Next.js admin dashboard
+                "https://localhost:3000",
+                "http://localhost:5173",                  // Vite/React portfolio
+                "https://localhost:5173",
+                "http://localhost:3001",                  // Alternative ports
+                "http://localhost:5174",
+                
+                // Render preview domains (if you use them)
+                "https://admin-kapil.onrender.com",
+                "https://portfolio-kapil.onrender.com"
+              )
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -166,6 +165,13 @@ app.UseAuthorization();
 
 // Add a root endpoint
 app.MapGet("/", () => Results.Redirect("/swagger"));
+
+// Add CORS test endpoint
+app.MapGet("/api/cors-test", () => new { 
+    message = "CORS is working!", 
+    timestamp = DateTime.UtcNow,
+    environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+}).WithOpenApi();
 
 app.MapControllers();
 

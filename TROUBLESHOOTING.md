@@ -16,6 +16,20 @@
 - ✅ Disabled HTTPS redirection in production (Render handles this)
 - ✅ Configured proper Swagger UI for production
 
+### Issue: CORS Policy Error
+
+**Error Message:**
+```
+Access to XMLHttpRequest at 'https://backend-portfolio-lpjj.onrender.com/api/auth/login' 
+from origin 'https://admin-kapil.netlify.app' has been blocked by CORS policy
+```
+
+**Solutions Applied:**
+- ✅ Added `https://admin-kapil.netlify.app` to allowed origins
+- ✅ Added multiple frontend domains for flexibility
+- ✅ Added CORS test endpoint at `/api/cors-test`
+- ✅ Configured proper CORS headers
+
 ### URLs to Test:
 
 1. **Root**: `https://backend-portfolio-lpjj.onrender.com/`
@@ -27,7 +41,10 @@
 3. **Health Check**: `https://backend-portfolio-lpjj.onrender.com/api/health`
    - Should return JSON with "healthy" status
 
-4. **API Base**: `https://backend-portfolio-lpjj.onrender.com/api/`
+4. **CORS Test**: `https://backend-portfolio-lpjj.onrender.com/api/cors-test`
+   - Should return CORS test response
+
+5. **API Base**: `https://backend-portfolio-lpjj.onrender.com/api/`
    - Base path for all API endpoints
 
 ### Environment Variables to Verify in Render:
