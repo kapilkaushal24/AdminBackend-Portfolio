@@ -1,0 +1,37 @@
+# Render Configuration
+environments:
+  - name: production
+    plan: free  # You can upgrade to paid plans later
+    
+# Build Command
+buildCommand: docker build -t portfolio-admin-api .
+
+# Start Command  
+startCommand: ./start.sh
+
+# Environment Variables (Set these in Render Dashboard)
+envVars:
+  - key: ASPNETCORE_ENVIRONMENT
+    value: Production
+  - key: ASPNETCORE_URLS
+    value: http://+:10000
+  - key: JWT_SECRET_KEY
+    sync: false  # Set this as a secret in Render
+  - key: JWT_ISSUER
+    value: PortfolioAdmin.Api
+  - key: JWT_AUDIENCE
+    value: PortfolioAdmin.Client
+
+# Health Check
+healthCheckPath: /swagger
+
+# Autoscaling (if on paid plan)
+# autoDeploy: true
+# numInstances: 1
+
+# Custom Headers
+headers:
+  - path: /*
+    headers:
+      X-Frame-Options: DENY
+      X-Content-Type-Options: nosniff

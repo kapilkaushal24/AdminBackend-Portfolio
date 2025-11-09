@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioAdmin.Api", "PortfolioAdmin.Api.csproj", "{AA0A0B48-6B2B-6FF8-B1C7-5CB0F552A16B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA0A0B48-6B2B-6FF8-B1C7-5CB0F552A16B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA0A0B48-6B2B-6FF8-B1C7-5CB0F552A16B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA0A0B48-6B2B-6FF8-B1C7-5CB0F552A16B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA0A0B48-6B2B-6FF8-B1C7-5CB0F552A16B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {07C557BB-39F2-4C89-A605-4E9950D995B1}
+	EndGlobalSection
+EndGlobal
